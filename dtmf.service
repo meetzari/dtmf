@@ -1,0 +1,17 @@
+[Unit]
+Description=PHP DTMF Server
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/php /var/www/html/ami_dtmf.php
+Restart=always
+User=root
+Group=root
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=dtmf-server
+
+[Install]
+WantedBy=multi-user.target
+
+
