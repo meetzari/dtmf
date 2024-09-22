@@ -1,6 +1,5 @@
 #!/bin/bash
-
-cp ami_dtmf.php /var/www/html
+cp ami_dtmf.php /var/www/html/
 cp call_dtmf.php /var/www/html
 cp dtmf.service /etc/systemd/system
 cp features_applicationmap_custom.conf /etc/asterisk
