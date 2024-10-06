@@ -4,7 +4,7 @@
 $dtmf = trim($_GET['dtmf']);
 
 // Prepend the incoming call message with the + sign
-$dtmf = "Incoming call from: +$dtmf";
+$dtmf = "Incoming call from: $dtmf";
 
 // Optional: Uncomment this section if you want to save to a file
 /*
