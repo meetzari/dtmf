@@ -30,8 +30,13 @@ while (!feof($socket)) {
     if (strpos($line, 'Event: DTMFBegin') !== false) {
         $eventData = [];
         while (($eventLine = trim(fgets($socket, 4096))) !== "") {
-            list($key, $value) = explode(': ', $eventLine);
-            $eventData[$key] = $value;
+            if (strpos(trim($eventLine), ':') !== strlen(trim($eventLine)) -1) {
+                echo "DTMF Event: " . $eventLine . "\n";
+                list($key, $value) = explode(': ', $eventLine);
+                $eventData[$key] = $value;
+            }
+            //list($key, $value) = explode(': ', $eventLine);
+            //$eventData[$key] = $value;
         }
 
         // Get the DTMF digit
@@ -54,9 +59,52 @@ while (!feof($socket)) {
         // Call the function with the new format
         getdtmf($output);
 
-        // Print the output (optional)
-        echo $output . "\n";
     }
+
+    // Check if the event is AgentConnect
+    if (strpos($line, 'Event: AgentConnect') !== false) {
+        $eventData = [];
+        while (($eventLine = trim(fgets($socket, 4096))) !== "") {
+            if (strpos(trim($eventLine), ':') !== strlen(trim($eventLine)) -1) {
+                //echo "abc: " . $eventLine . "\n";
+                list($key, $value) = explode(': ', $eventLine);
+                $eventData[$key] = $value;
+            }
+        }
+
+        // Get the callerid and callee
+        $caller = $eventData['CallerIDNum'];
+        $callee = $eventData['ConnectedLineNum'];
+        
+        //101 answered call from 44763636474
+        $output = "$callee answered call from $caller\n";
+        
+        echo $output;
+        
+        getdtmf($output);
+    }
+    
+    if (strpos($line, 'Event: AgentComplete') !== false) {
+        $eventData = [];
+        while (($eventLine = trim(fgets($socket, 4096))) !== "") {
+            if (strpos(trim($eventLine), ':') !== strlen(trim($eventLine)) -1) {
+                //echo "abc: " . $eventLine . "\n";
+                list($key, $value) = explode(': ', $eventLine);
+                $eventData[$key] = $value;
+            }
+        }
+
+        // Get the callerid and callee
+        $caller = $eventData['CallerIDNum'];
+        $callee = $eventData['ConnectedLineNum'];
+        
+        //101 finished on phone
+        $output = "$callee finished on phone from $caller\n";
+        echo $output;
+        
+        getdtmf($output);
+    }
+
 }
 
 // Logout and close the socket
