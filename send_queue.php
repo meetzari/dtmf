@@ -4,7 +4,8 @@
 $calls = file_get_contents("/var/www/html/data.txt");
 
 if ($calls > 0) {
-    getdtmf($calls);
+    $output = "People in queue: " . $calls;
+    getdtmf($output);
 }
 
 function getdtmf($dtmf) {
