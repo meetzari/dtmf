@@ -75,8 +75,8 @@ while (!feof($socket)) {
         }
 
 	$calls += 1;
-        $output = "Active calls are: $calls \n";
-	getdtmf($output);
+        //$output = "Active calls are: $calls \n";
+	file_put_contents('/var/www/html/data.txt', $calls);
 
         // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
@@ -105,8 +105,8 @@ while (!feof($socket)) {
         }
 
 	$calls -= 1;
-        $output = "Active calls are: $calls \n";
-	getdtmf($output);
+        //$output = "Active calls are: $calls \n";
+	file_put_contents('/var/www/html/data.txt', $calls);
 
         // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
