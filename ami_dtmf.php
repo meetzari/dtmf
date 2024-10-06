@@ -22,6 +22,8 @@ fputs($socket, "Secret: $password\r\n\r\n");
 $response = fread($socket, 4096);
 echo "Login Response: $response\n";
 
+$calls = 0;
+
 // Monitor events in a loop
 while (!feof($socket)) {
     $line = fgets($socket, 4096);
@@ -72,6 +74,10 @@ while (!feof($socket)) {
             }
         }
 
+	$calls += 1;
+        $output = "Active calls are: $calls \n";
+	getdtmf($output);
+
         // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
         $callee = $eventData['Interface'];
@@ -97,6 +103,10 @@ while (!feof($socket)) {
                 $eventData[$key] = $value;
             }
         }
+
+	$calls -= 1;
+        $output = "Active calls are: $calls \n";
+	getdtmf($output);
 
         // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
