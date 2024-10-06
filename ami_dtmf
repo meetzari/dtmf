@@ -31,7 +31,7 @@ while (!feof($socket)) {
         $eventData = [];
         while (($eventLine = trim(fgets($socket, 4096))) !== "") {
             if (strpos(trim($eventLine), ':') !== strlen(trim($eventLine)) -1) {
-                echo "DTMF Event: " . $eventLine . "\n";
+                //echo "DTMF Event: " . $eventLine . "\n";
                 list($key, $value) = explode(': ', $eventLine);
                 $eventData[$key] = $value;
             }
