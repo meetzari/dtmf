@@ -1,10 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-$calls = file_get_contents("/var/www/html/data.txt");
+$output = trim(file_get_contents("/var/www/html/data.txt"));
 
-if ($calls > 0) {
-    $output = "People in queue: " . $calls;
+if ($output != "Waiting: 0") {
     getdtmf($output);
 }
 
