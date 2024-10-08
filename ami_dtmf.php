@@ -22,7 +22,7 @@ fputs($socket, "Secret: $password\r\n\r\n");
 $response = fread($socket, 4096);
 echo "Login Response: $response\n";
 
-$calls = 0;
+$callers = [];
 
 // Monitor events in a loop
 while (!feof($socket)) {
@@ -62,9 +62,9 @@ while (!feof($socket)) {
         getdtmf($output);
 
     }
-
-    // Check if the event is AgentConnect
-    if (strpos($line, 'Event: AgentConnect') !== false) {
+    
+    // Check if the event is QueueCallerJoin
+    if (strpos($line, 'Event: QueueCallerJoin') !== false) {
         $eventData = [];
         while (($eventLine = trim(fgets($socket, 4096))) !== "") {
             if (strpos(trim($eventLine), ':') !== strlen(trim($eventLine)) -1) {
@@ -74,55 +74,59 @@ while (!feof($socket)) {
             }
         }
 
-	$calls += 1;
-        //$output = "Active calls are: $calls \n";
-	file_put_contents('/var/www/html/data.txt', $calls);
+        // Get the callerid and callee
+        $caller = $eventData['CallerIDNum'];
+        $count = $eventData['Count'];
+	    $linkedid = $eventData['Linkedid'];
+	
+	    $callers[$linkedid] = $caller;
+
+	$queue = "";
+	
+	foreach ($callers as $key => $value) {
+    		$queue .= $value . "\n";
+	}
+
+        $output = "$count \n$queue\n";
+        getdtmf($output);
+        file_put_contents('/var/www/html/data.txt', $output);
+    }
+
+
+    // Check if the event is QueueCallerLeave
+    if (strpos($line, 'Event: QueueCallerLeave') !== false) {
+        $eventData = [];
+        while (($eventLine = trim(fgets($socket, 4096))) !== "") {
+            if (strpos(trim($eventLine), ':') !== strlen(trim($eventLine)) -1) {
+                //echo "abc: " . $eventLine . "\n";
+                list($key, $value) = explode(': ', $eventLine);
+                $eventData[$key] = $value;
+            }
+        }
 
         // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
-        $callee = $eventData['Interface'];
+        $count = $eventData['Count'];
+	    $linkedid = $eventData['Linkedid'];
+	
+	    unset($callers[$linkedid]);
 
-	// Split by `/` and `@`
-	$parts = explode('/', $callee); // Split at the `/`
-	$callee = explode('@', $parts[1])[0]; // Further split at `@`
-  
         //101 answered call from 44763636474
-        $output = "$callee answered call from $caller\n";
-        
-        echo $output;
-        
+
+	$queue = "";
+
+	if ($count > 0) {
+		foreach ($callers as $key => $value) {
+    			$queue .= $value . "\n";
+		}
+	} else {
+		$queue = "";
+	}     
+        $output = "$count \n$queue\n";
         getdtmf($output);
+        file_put_contents('/var/www/html/data.txt', $output);
     }
     
-    if (strpos($line, 'Event: AgentComplete') !== false) {
-        $eventData = [];
-        while (($eventLine = trim(fgets($socket, 4096))) !== "") {
-            if (strpos(trim($eventLine), ':') !== strlen(trim($eventLine)) -1) {
-                //echo "abc: " . $eventLine . "\n";
-                list($key, $value) = explode(': ', $eventLine);
-                $eventData[$key] = $value;
-            }
-        }
-
-	$calls -= 1;
-        //$output = "Active calls are: $calls \n";
-	file_put_contents('/var/www/html/data.txt', $calls);
-
-        // Get the callerid and callee
-        $caller = $eventData['CallerIDNum'];
-        $callee = $eventData['Interface'];
-
-	// Split by `/` and `@`
-	$parts = explode('/', $callee); // Split at the `/`
-	$callee = explode('@', $parts[1])[0]; // Further split at `@`        
-
-        //101 finished on phone
-        $output = "$callee finished on phone from $caller\n";
-        echo $output;
-        
-        getdtmf($output);
-    }
-
 }
 
 // Logout and close the socket
