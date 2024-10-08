@@ -87,7 +87,7 @@ while (!feof($socket)) {
     		$queue .= $value . "\n";
 	}
 
-        $output = "$count \n$queue\n";
+        $output = "Waiting: $count \n$queue\n";
         getdtmf($output);
         file_put_contents('/var/www/html/data.txt', $output);
     }
@@ -122,11 +122,11 @@ while (!feof($socket)) {
 	} else {
 		$queue = "";
 	}     
-        $output = "$count \n$queue\n";
+        $output = "Waiting: $count \n$queue\n";
         getdtmf($output);
         file_put_contents('/var/www/html/data.txt', $output);
     }
-    
+
 }
 
 // Logout and close the socket
