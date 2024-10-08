@@ -138,10 +138,6 @@ while (!feof($socket)) {
             }
         }
 
-	$calls += 1;
-        //$output = "Active calls are: $calls \n";
-	file_put_contents('/var/www/html/data.txt', $calls);
-
         // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
         $callee = $eventData['Interface'];
@@ -152,8 +148,6 @@ while (!feof($socket)) {
   
         //101 answered call from 44763636474
         $output = "$callee answered call from $caller\n";
-        
-        echo $output;
         
         getdtmf($output);
     }
@@ -168,11 +162,7 @@ while (!feof($socket)) {
             }
         }
 
-	$calls -= 1;
-        //$output = "Active calls are: $calls \n";
-	file_put_contents('/var/www/html/data.txt', $calls);
-
-        // Get the callerid and callee
+	// Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
         $callee = $eventData['Interface'];
 
@@ -182,8 +172,7 @@ while (!feof($socket)) {
 
         //101 finished on phone
         $output = "$callee finished on phone from $caller\n";
-        echo $output;
-        
+               
         getdtmf($output);
     }
 }
