@@ -107,20 +107,18 @@ while (!feof($socket)) {
         // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
         $count = $eventData['Count'];
-	    $linkedid = $eventData['Linkedid'];
+	$linkedid = $eventData['Linkedid'];
 	
-	    unset($callers[$linkedid]);
-
-        //101 answered call from 44763636474
+	unset($callers[$linkedid]);
 
 	$queue = "";
 
 	if ($count > 0) {
-		foreach ($callers as $key => $value) {
-    			$queue .= $value . "\n";
-		}
+	    foreach ($callers as $key => $value) {
+    		$queue .= $value . "\n";
+	    }
 	} else {
-		$queue = "";
+	    $queue = "";
 	}     
         $output = "Waiting: $count \n$queue\n";
         getdtmf($output);
