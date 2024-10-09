@@ -22,6 +22,7 @@ fputs($socket, "Secret: $password\r\n\r\n");
 $response = fread($socket, 4096);
 echo "Login Response: $response\n";
 
+$calls = 0;
 $callers = [];
 
 // Monitor events in a loop
@@ -62,7 +63,7 @@ while (!feof($socket)) {
         getdtmf($output);
 
     }
-    
+
     // Check if the event is QueueCallerJoin
     if (strpos($line, 'Event: QueueCallerJoin') !== false) {
         $eventData = [];
@@ -107,18 +108,20 @@ while (!feof($socket)) {
         // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
         $count = $eventData['Count'];
-	$linkedid = $eventData['Linkedid'];
+	    $linkedid = $eventData['Linkedid'];
 	
-	unset($callers[$linkedid]);
+	    unset($callers[$linkedid]);
+
+        //101 answered call from 44763636474
 
 	$queue = "";
 
 	if ($count > 0) {
-	    foreach ($callers as $key => $value) {
-    		$queue .= $value . "\n";
-	    }
+		foreach ($callers as $key => $value) {
+    			$queue .= $value . "\n";
+		}
 	} else {
-	    $queue = "";
+		$queue = "";
 	}     
         $output = "Waiting: $count \n$queue\n";
         getdtmf($output);
@@ -136,6 +139,10 @@ while (!feof($socket)) {
             }
         }
 
+	$calls += 1;
+        //$output = "Active calls are: $calls \n";
+	
+
         // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
         $callee = $eventData['Interface'];
@@ -146,6 +153,9 @@ while (!feof($socket)) {
   
         //101 answered call from 44763636474
         $output = "$callee answered call from $caller\n";
+        $output .= "Active calls are: $calls\n";
+        
+        echo $output;
         
         getdtmf($output);
     }
@@ -160,7 +170,10 @@ while (!feof($socket)) {
             }
         }
 
-	// Get the callerid and callee
+	$calls -= 1;
+        //$output = "Active calls are: $calls \n";
+	
+        // Get the callerid and callee
         $caller = $eventData['CallerIDNum'];
         $callee = $eventData['Interface'];
 
@@ -170,9 +183,13 @@ while (!feof($socket)) {
 
         //101 finished on phone
         $output = "$callee finished on phone from $caller\n";
-               
+        $output .= "Active calls are: $calls\n";
+        
+        echo $output;
+        
         getdtmf($output);
     }
+
 }
 
 // Logout and close the socket
