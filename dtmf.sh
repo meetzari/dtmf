@@ -29,9 +29,9 @@ else
     echo "Cron job A added successfully."
 fi
 
-if crontab -l | grep -Fq "$cron_job_b"; then
-    echo "Cron job B already exists."
-else
-    (crontab -l 2>/dev/null; echo "$cron_job_b") | crontab -
-    echo "Cron job B added successfully."
-fi
+#if crontab -l | grep -Fq "$cron_job_b"; then
+#    echo "Cron job B already exists."
+#else
+#    (crontab -l 2>/dev/null; echo "$cron_job_b") | crontab -
+#    echo "Cron job B added successfully."
+#fi
